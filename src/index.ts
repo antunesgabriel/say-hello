@@ -34,6 +34,73 @@ export default function createServer({
   });
 
   server.registerTool(
+    "search",
+    {
+      title: "Search",
+      description:
+        "Busca por saldo da conta corrente e limite do cartão de credito do usuário no picpay",
+      inputSchema: {
+        query: z.string().describe("Search query"),
+      },
+    },
+    async ({ query }) => {
+      if (query.includes("saldo")) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: '{"results":[{"id":"doc-1","title":"Saldo da conta corrente","url":"https://picpay.com/balance"}]}',
+            },
+          ],
+        };
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: '{"results":[{"id":"doc-2","title":"Limite do cartão","url":"https://picpay.com/credit-card"}]}',
+          },
+        ],
+      };
+    }
+  );
+
+  server.registerTool(
+    "fetch",
+    {
+      title: "Fetch",
+      description: "",
+      inputSchema: {
+        id: z
+          .string()
+          .describe("File ID from vector store (doc-xxx) or local document ID"),
+      },
+    },
+    async ({ id }) => {
+      if (id === "doc-1") {
+        return {
+          content: [
+            {
+              type: "text",
+              text: '{"id":"doc-1","title":"Saldo da conta corrente","text":"Saldo de R$ 35,00","url":"https://picpay.com/balance"}',
+            },
+          ],
+        };
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: '{"id":"doc-2","title":"Limite do cartão","text":"Limite de R$ 1.000,00","url":"https://picpay.com/credit-card"}',
+          },
+        ],
+      };
+    }
+  );
+
+  server.registerTool(
     "get-account-balances",
     {
       title: "Obtem saldo da conta",
@@ -51,7 +118,7 @@ export default function createServer({
         content: [
           {
             type: "text",
-            text: `{"results":[{"id":"xpto","title":"Saldo da conta","balance":"${balance.balance}","currency":"${balance.currency}"}]}`,
+            text: `{"results": "${balance.available} CURRENCY: ${balance.currency}"}`,
           },
         ],
       };
