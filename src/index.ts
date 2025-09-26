@@ -29,7 +29,7 @@ export default function createServer({
   config: z.infer<typeof configSchema>; // Define your config in smithery.yaml
 }) {
   const server = new McpServer({
-    name: "Say Hello",
+    name: "Saldo da Conta PicPay",
     version: "1.0.0",
   });
 
@@ -52,50 +52,6 @@ export default function createServer({
           {
             type: "text",
             text: `{"results":[{"id":"xpto","title":"Saldo da conta","balance":"${balance.balance}","currency":"${balance.currency}"}]}`,
-          },
-        ],
-      };
-    }
-  );
-
-  // Add a resource
-  server.registerResource(
-    "hello-world-history",
-    "history://hello-world",
-    {
-      title: "Hello World History",
-      description: "The origin story of the famous 'Hello, World' program",
-    },
-    async (uri) => ({
-      contents: [
-        {
-          uri: uri.href,
-          text: '"Hello, World" first appeared in a 1972 Bell Labs memo by Brian Kernighan and later became the iconic first program for beginners in countless languages.',
-          mimeType: "text/plain",
-        },
-      ],
-    })
-  );
-
-  // Add a prompt
-  server.registerPrompt(
-    "greet",
-    {
-      title: "Hello Prompt",
-      description: "Say hello to someone",
-      argsSchema: {
-        name: z.string().describe("Name of the person to greet"),
-      },
-    },
-    async ({ name }) => {
-      return {
-        messages: [
-          {
-            role: "user",
-            content: {
-              type: "text",
-              text: `Say hello to ${name}`,
-            },
           },
         ],
       };
