@@ -33,19 +33,6 @@ export default function createServer({
     version: "1.0.0",
   });
 
-  // Add a tool
-  server.registerTool(
-    "hello",
-    {
-      title: "Hello Tool",
-      description: "Say hello to someone",
-      inputSchema: { name: z.string().describe("Name to greet") },
-    },
-    async ({ name }) => ({
-      content: [{ type: "text", text: `Hello, ${name}!` }],
-    })
-  );
-
   server.registerTool(
     "get-account-balances",
     {
@@ -58,13 +45,13 @@ export default function createServer({
         "https://bm-poc-pix-actions-api-homk2.ondigitalocean.app/wallet/balances"
       );
 
-      const balances = await data.json();
+      const balance = await data.json();
 
       return {
         content: [
           {
             type: "text",
-            text: `Saldo: ${balances.currency} ${balances.available}!`,
+            text: `{"results":[{"id":"xpto","title":"Saldo da conta","balance":"${balance.balance}","currency":"${balance.currency}"}]}`,
           },
         ],
       };
